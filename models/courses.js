@@ -1,9 +1,9 @@
 "use strict";
-const { ConnectionRefusedError } = require("sequelize");
-const Sequelize = require("sequelize");
-module.exports = (sequelzie) => {
-  class Course extends Model {}
-  ConnectionRefusedError.init(
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class Courses extends Model {}
+  Courses.init(
     {
       title: {
         type: DataTypes.STRING,
@@ -12,27 +12,35 @@ module.exports = (sequelzie) => {
           notNull: {
             msg: "Title required",
           },
+          notEmpty: {
+            msg: "Title required",
+          },
         },
       },
       description: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
+            msg: "Description required",
+          },
+          notEmpty: {
             msg: "Description required",
           },
         },
       },
       estimatedTime: DataTypes.STRING,
       materialsNeeded: DataTypes.STRING,
+      userId: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "Course",
+      modelName: "Courses",
     }
   );
-  Course.associate = (models) => {
-    Course.belongsTo(models.Course, { foreignKey: "userId" });
+  //Model association
+  Courses.associate = (models) => {
+    Courses.belongsTo(models.Users, { foreignKey: "userId" });
   };
-  return Course;
+  return Courses;
 };

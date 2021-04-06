@@ -1,55 +1,69 @@
 "use strict";
-const { ConnectionRefusedError } = require("sequelize");
-const Sequelize = require("sequelize");
-module.exports = (sequelzie) => {
-  class User extends Model {}
-  ConnectionRefusedError.init(
+const { Model, DataTypes } = require("sequelize");
+const bcrypt = require("bcryptjs");
+const models = require("./index");
+module.exports = (sequelize) => {
+  class Users extends Model {}
+  Users.init(
     {
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Name is required",
+            msg: "First name required",
           },
         },
       },
       lastName: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Name is required",
+            msg: "Last name required",
           },
         },
       },
-      emaiAddress: {
-        type: Sequelize.DataTypes.STRING,
+      emailAddress: {
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
-          isEmail: {
-            msg: "Email is required",
-          },
+          isEmail: { msg: "Invalid email." },
+          notNull: { msg: "The email is required" },
         },
       },
       password: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
-        required: true,
         validate: {
-          isPassword: {
-            msg: "Password is required",
+          len: {
+            args: [6],
+            msg: "Minimum password length is 6 characters",
+          },
+          notEmpty: {
+            args: [true],
+            msg: "Please enter a password",
+          },
+          notNull: {
+            args: [true],
+            msg: "Please enter a password",
           },
         },
       },
     },
     {
+      hooks: {
+        beforeCreate: async (user) =>
+          (user.password = await bcrypt.hash(user.password, 10)),
+      },
       sequelize,
-      modelName: "User",
+      modelName: "Users",
     }
   );
-  User.associate = (models) => {
-    User.hasMany(models.User, { foreignKey: "userId" });
+  //Model Associations
+  Users.associate = (models) => {
+    Users.hasMany(models.Courses, { foreignKey: "userId" });
   };
-  return User;
+  return Users;
 };
