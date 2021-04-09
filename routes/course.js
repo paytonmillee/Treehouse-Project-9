@@ -44,12 +44,12 @@ router.post("/", authenticateUser, (req, res) => {
   Courses.create(req.body)
     //Checking if the page runs successfully
     .then((course) => {
-      res.status(201).json(course).end();
+      res.status(201).Location(`/api/course/$[course.id]`);
     })
     //Checking to see if error is on page
     .catch((error) => {
       console.log(error);
-      res.status(500);
+      res.status(400);
       res.json(error).end();
     });
 });
@@ -63,15 +63,15 @@ router.put("/:id", authenticateUser, function (req, res, next) {
         .update(req.body)
 
         .then((course) => {
-          res.status(201).json(course).end();
+          res.status(201).end();
         })
         .catch((error) => {
-          res.status(500);
+          res.status(400);
           res.json(error).end();
         });
     })
     .catch((error) => {
-      res.status(500);
+      res.status(400);
       res.json(error).end();
     });
 });

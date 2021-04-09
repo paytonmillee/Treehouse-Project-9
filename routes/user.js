@@ -5,13 +5,7 @@ const { authenticateUser } = require("../middleware/auth-user");
 
 //User GET route
 router.get("/", authenticateUser, (req, res, next) => {
-  Users.findAll({
-    include: [
-      {
-        model: Courses,
-      },
-    ],
-  })
+  Users.findByPk(req.currentuser.id)
     .then((users) => {
       res.status(200);
       res.json(users).end();
