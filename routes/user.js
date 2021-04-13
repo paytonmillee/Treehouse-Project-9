@@ -5,7 +5,8 @@ const { authenticateUser } = require("../middleware/auth-user");
 
 //User GET route
 router.get("/", authenticateUser, (req, res, next) => {
-  Users.findByPk(req.currentuser.id)
+  console.log(req.currentUser);
+  Users.findByPk(req.currentUser.id)
     .then((users) => {
       res.status(200);
       res.json(users).end();
@@ -26,7 +27,7 @@ router.post("/", (req, res, next) => {
     password: user.password,
   })
     .then((user) => {
-      res.status(201).location("/");
+      res.status(201).location("/").end();
       res.end();
     })
     .catch((error) => {

@@ -44,7 +44,7 @@ router.post("/", authenticateUser, (req, res) => {
   Courses.create(req.body)
     //Checking if the page runs successfully
     .then((course) => {
-      res.status(201).Location(`/api/course/$[course.id]`);
+      res.status(201).location(`/api/courses/${course.id}`).end();
     })
     //Checking to see if error is on page
     .catch((error) => {
@@ -63,7 +63,7 @@ router.put("/:id", authenticateUser, function (req, res, next) {
         .update(req.body)
 
         .then((course) => {
-          res.status(201).end();
+          res.status(204).end();
         })
         .catch((error) => {
           res.status(400);
